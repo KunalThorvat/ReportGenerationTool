@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"      
+      xmlns:h="http://java.sun.com/jsf/html">
+      
+	<h:head>
+		<!-- <h:outputScript library="js" name="jquery-ui.js"></h:outputScript> -->	
+		<h:outputStylesheet library="css" name="bootstrap.css"></h:outputStylesheet>
+		<h:outputStylesheet library="css" name="style.css"></h:outputStylesheet>
+		
+	</h:head>
+	<h:body>
+	<div class="container-fluid" style="background-color: #e0ebeb!important;">
+		<div class="col-md-12">
+
+	        <div class="container">
+	            <!-- Brand name -->
+	            <a id="logo" href="#" class="navbar-brand" title="Template Name">Report Generation Tool</a>
+	            <!-- Navagation -->
+	            <nav class="collapse navbar-collapse" id="mainNavBar">
+	                <ul class="nav navbar-nav navbar-right">
+	                    <li class="active"><a href="#hero">Home</a></li>
+	                    <li class=""><a href="#features">Features</a></li>
+			            <li><a href="#image">About</a></li>
+			            <li><a href="#gallery">Gallery</a></li>
+			            <li><a href="#faq">FAQ</a></li>
+			            <li><a href="#slider">Testimonials</a></li>
+			            <li><a href="#newsletter">Subscribe</a></li>
+	                </ul>
+	            </nav>
+	        </div>
+
+    	</div>
+    </div>
+    	
+    <div class="upload-section">	
+   		<div class="col-md-12"></div>
+   		<div class="col-md-12"></div>
+   		<div class="col-md-12"></div>
+   		
+   		<div class="col-md-12">
+   			<div class="col-md-4"></div>
+   			<div class="col-md-4">
+   				<h:form enctype="multipart/form-data">
+   					<div class="col-md-1"></div>
+   					<div class="col-md-7">
+   						<h:inputFile value="#{fileUpload.file}"></h:inputFile>
+   					</div>
+   					<div class="col-md-3">
+   						<h:commandButton action="#{fileUpload.uploadFile}" value="Upload" class="btn btn-primary" onclick = ""></h:commandButton>
+   					</div>
+   					<div class="col-md-1"></div>
+   				</h:form>
+   			</div>
+   			<div class="col-md-4"></div>
+   		</div>
+   		   		
+   		<div class="col-md-12 topSingleSpace">
+   			<div class="col-md-4"></div>
+   			<div class="col-md-4">
+   				<h:panelGrid class="alert alert-success" role="alert" >
+ 					<strong>
+ 						<h:outputText value="#{fileUpload.message}" rendered="#{!empty fileUpload.message}"></h:outputText>
+ 					</strong>
+   				</h:panelGrid>
+   			</div>
+   			<div class="col-md-4"></div>
+   		</div>
+   		
+   		<h:panelGroup class="col-md-12 topSingleSpace" 
+   						rendered="#{!empty fileUpload.message}" id="uploadedTable">
+   			<div class= "col-md-3"></div>
+   			<div class= "col-md-6" style="overflow: auto;height: 600px;">
+	   			<h:dataTable value="#{fileUpload.uploadedFile}" 
+	   							var="record"
+	   							styleClass="table-bordered table-striped">
+	   			
+	   				<h:column>
+	   					<f:facet name="header">First Name</f:facet>
+	   					#{record.getFirstName()}
+	   				</h:column>
+	   			
+	   				<h:column>
+	   					<f:facet name="header">Last Name</f:facet>
+	   					#{record.getLastName()}
+	   				</h:column>
+	   				
+	   				<h:column>
+	   					<f:facet name="header">Email ID</f:facet>
+	   					#{record.getEmailID()}
+	   				</h:column>
+	   				
+	   				<h:column>
+	   					<f:facet name="header">Completion Date</f:facet>
+	   					#{record.getCompletionDate()}
+	   				</h:column>
+	   				
+	   				<h:column>
+	   					<f:facet name="header">Completion Date Formatted</f:facet>
+	   					#{record.getCompletionDateFormatted()}
+	   				</h:column>
+	   				
+	   				<h:column>
+	   					<f:facet name="header">Certificate Code</f:facet>
+	   					#{record.getCertificateCode()}
+	   				</h:column>
+	   			
+	   			</h:dataTable>
+	   		</div>
+   			<div class= "col-md-3"></div>
+   		</h:panelGroup>
+   		
+   		<h:panelGroup class="col-md-12  topSingleSpace" id="buttonSection" style="display: none;">
+   			<div class="col-md-4"></div>
+   			<div class="col-md-4">
+   				<h:form>
+   					<!-- <div class="col-md-1"></div> -->
+   					<div class="col-md-9">
+   						<h:selectOneMenu value="#{fileUpload.selectedValue}" class="form-control">
+   							<f:selectItems value="#{fileUpload.courseDropDown}"></f:selectItems>
+   						</h:selectOneMenu>
+   					</div>
+   					<div class="col-md-2">
+   						<h:commandButton action="#{fileUpload.generateCSV}" value="Generate CSV" class="btn btn-primary">
+   						</h:commandButton>
+   					</div>
+   					<div class="col-md-1"></div>
+   				</h:form>
+   			</div>
+   			<div class="col-md-4"></div>
+   		</h:panelGroup>
+   		
+   		
+   		
+   	</div>
+    
+    	
+    	
+	</h:body>
+</html>

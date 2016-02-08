@@ -1,0 +1,14 @@
+eclipse.preferences.version=1
+org.eclipse.jdt.core.codeComplete.visibilityCheck=enabled
+org.eclipse.jdt.core.compiler.codegen.inlineJsrBytecode=enabled
+org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.8
+org.eclipse.jdt.core.compiler.compliance=1.8
+org.eclipse.jdt.core.compiler.problem.assertIdentifier=error
+org.eclipse.jdt.core.compiler.problem.enumIdentifier=error
+org.eclipse.jdt.core.compiler.source=1.8
+org.eclipse.jdt.core.timeoutForParameterNameFromAttachedJavadoc=50
+org.eclipse.jdt.core.userLibrary.JODA=<?xml version\="1.0" encoding\="UTF-8"?>\r\n<userlibrary systemlibrary\="false" version\="2">\r\n\t<archive path\="C\:/Users/kthorv2/Desktop/ReportGeneration/JODA/joda-time-2.9.1.jar"/>\r\n\t<archive path\="C\:/Users/kthorv2/Desktop/ReportGeneration/JODA/joda-time-2.9.1-javadoc.jar"/>\r\n\t<archive path\="C\:/Users/kthorv2/Desktop/ReportGeneration/JODA/joda-time-2.9.1-no-tzdb.jar"/>\r\n\t<archive path\="C\:/Users/kthorv2/Desktop/ReportGeneration/JODA/joda-time-2.9.1-sources.jar"/>\r\n</userlibrary>\r\n
+org.eclipse.jdt.core.userLibrary.JSF\ 2.2\ (Mojarra\ 2.2.0)=<?xml version\="1.0" encoding\="UTF-8"?>\r\n<userlibrary systemlibrary\="false" version\="2">\r\n\t<archive path\="C\:/Users/kthorv2/Desktop/ReportGeneration/ToolWorkspace/libraries/JSF 2.2 (Mojarra 2.2.0)/mojarra-2.2.0-FCS/lib/javax.faces.jar"/>\r\n</userlibrary>\r\n
+org.eclipse.jdt.core.userLibrary.JSF\ 2.2\ (Mojarra\ 2.2.0)\ (1)=<?xml version\="1.0" encoding\="UTF-8"?>\r\n<userlibrary systemlibrary\="false" version\="2">\r\n\t<archive path\="C\:/Users/kthorv2/Desktop/ReportGeneration/ToolWorkspace/libraries/JSF 2.2 (Mojarra 2.2.0) (1)/mojarra-2.2.0-FCS/lib/javax.faces.jar"/>\r\n</userlibrary>\r\n
+org.eclipse.jdt.core.userLibrary.POI=<?xml version\="1.0" encoding\="UTF-8"?>\r\n<userlibrary systemlibrary\="false" version\="2">\r\n\t<archive path\="C\:/Users/kthorv2/Desktop/ReportGeneration/POI/poi-3.13/poi-3.13-20150929.jar"/>\r\n\t<archive path\="C\:/Users/kthorv2/Desktop/ReportGeneration/POI/poi-3.13/poi-examples-3.13-20150929.jar"/>\r\n\t<archive path\="C\:/Users/kthorv2/Desktop/ReportGeneration/POI/poi-3.13/poi-excelant-3.13-20150929.jar"/>\r\n\t<archive path\="C\:/Users/kthorv2/Desktop/ReportGeneration/POI/poi-3.13/poi-ooxml-3.13-20150929.jar"/>\r\n\t<archive path\="C\:/Users/kthorv2/Desktop/ReportGeneration/POI/poi-3.13/poi-ooxml-schemas-3.13-20150929.jar"/>\r\n\t<archive path\="C\:/Users/kthorv2/Desktop/ReportGeneration/POI/poi-3.13/poi-scratchpad-3.13-20150929.jar"/>\r\n</userlibrary>\r\n
+org.eclipse.jdt.core.userLibrary.loggers=<?xml version\="1.0" encoding\="UTF-8"?>\r\n<userlibrary systemlibrary\="false" version\="2">\r\n\t<archive path\="C\:/Users/kthorv2/Desktop/ReportGeneration/loggers/apache-log4j-1.2.17/log4j-1.2.17.jar"/>\r\n</userlibrary>\r\n

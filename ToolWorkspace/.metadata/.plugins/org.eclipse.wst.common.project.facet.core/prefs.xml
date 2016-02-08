@@ -1,0 +1,19 @@
+<root>
+  <facet id="jst.jsf">
+    <node name="libprov">
+      <node name="last-provider-used">
+        <attribute name="2.2" value="jsf-user-library-provider"/>
+      </node>
+    </node>
+    <node name="user.library.provider">
+      <node name="last.used.libraries">
+        <node name="2.2">
+          <node name="JODA"/>
+          <node name="JSF 2.2 (Mojarra 2.2.0) (1)"/>
+          <node name="POI"/>
+          <node name="loggers"/>
+        </node>
+      </node>
+    </node>
+  </facet>
+</root>

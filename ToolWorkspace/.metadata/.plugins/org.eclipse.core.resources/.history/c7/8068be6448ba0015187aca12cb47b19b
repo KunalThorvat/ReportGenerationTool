@@ -1,0 +1,117 @@
+package com.tool.mcphp.managedbeans;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
+import javax.faces.bean.ApplicationScoped;
+import javax.faces.bean.ManagedBean;
+import javax.servlet.ServletContextEvent;
+
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+
+import com.tool.mcphp.constant.ConstantFile;
+import com.tool.mcphp.databeans.Course;
+
+/**
+ * 
+ * @author kthorv2
+ * for populating all the course related details
+ */
+@ManagedBean(name = "courseDetails")
+@ApplicationScoped
+public class CourseDetails {
+
+	private Map<String,Course> courseMap = new HashMap<String,Course>();
+
+	public Map<String, Course> getCourseMap() {
+		return courseMap;
+	}
+
+	public void setCourseMap(Map<String, Course> courseMap) {
+		this.courseMap = courseMap;
+	}
+	
+	
+	/*method for building the csvdetails map*/
+	public Map<String,Course> buildCsvDetails() throws FileNotFoundException{
+		
+		System.out.println("Building the csv map.......");
+		
+		Workbook wb = (Workbook) new FileInputStream(ConstantFile.MAIN_PATH+ConstantFile.CSV_DETAILS_FILE);
+		Sheet sheet = wb.getSheetAt(0);
+		
+		Iterator rowIterator = sheet.rowIterator();
+		
+		while(rowIterator.hasNext()){
+			Row row = (Row) rowIterator.next();
+			
+			if(row.getRowNum() != 0){
+				Course course = new Course();
+				Iterator cellIterator = row.cellIterator();
+				
+				while(cellIterator.hasNext()){
+					
+					Cell cell = (Cell) cellIterator.next();
+					
+					if(cell.getColumnIndex() == ConstantFile.CSV_DETAILS_FOLDER_NAME){
+						cell.setCellType(cell.CELL_TYPE_STRING);
+						course.setFolderName(cell.getRichStringCellValue().getString());
+					}else if(cell.getColumnIndex() == ConstantFile.CSV_DETAILS_FOLDER_PATH){
+						cell.setCellType(cell.CELL_TYPE_STRING);
+						course.setFolderPath(cell.getRichStringCellValue().getString());
+					}else if(cell.getColumnIndex() == ConstantFile.CSV_DETAILS_ALL_SUBMITTED){
+						cell.setCellType(cell.CELL_TYPE_STRING);
+						course.setAllSubmittedPath(cell.getRichStringCellValue().getString());
+					}else if(cell.getColumnIndex() == ConstantFile.CSV_DETAILS_CSV_FILE_NAME){
+						cell.setCellType(cell.CELL_TYPE_STRING);
+						course.setCsvFileName(cell.getRichStringCellValue().getString());
+					}else if(cell.getColumnIndex() == ConstantFile.CSV_DETAILS_EXCEL_FILE_NAME){
+						cell.setCellType(cell.CELL_TYPE_STRING);
+						course.setExcelFileName(cell.getRichStringCellValue().getString());
+					}else if(cell.getColumnIndex() == ConstantFile.CSV_DETAILS_COURSE_ID){
+						cell.setCellType(Cell.CELL_TYPE_STRING);
+						course.setCourseID(cell.getRichStringCellValue().getString());
+					}
+				}
+				
+				courseMap.put(course.getCourseID(), course);
+			}
+			
+			
+			
+		}
+		
+		printCSVMap();
+		return courseMap;
+		
+	}
+
+	
+	/*for testing purpose only*/
+	public void printCSVMap(){
+		Iterator it = courseMap.entrySet().iterator();
+		
+		while(it.hasNext()){
+			Map.Entry pair = (Map.Entry)it.next();
+			
+			System.out.println(pair.getKey() + " : " );
+			Course course = (Course) pair.getValue();
+			
+			System.out.println(course.getFolderName());
+			System.out.println(course.getFolderPath());
+			System.out.println(course.getAllSubmittedPath());
+			System.out.println(course.getCsvFileName());
+			System.out.println(course.getExcelFileName());
+			System.out.println(course.getCourseID());
+			
+		}
+	} 
+	/*for testing purpose only*/
+	
+}

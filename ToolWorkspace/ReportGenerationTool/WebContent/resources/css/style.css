@@ -1,0 +1,13 @@
+@CHARSET "ISO-8859-1";
+
+.upload-section {
+  padding-right: 15px;
+  padding-left: 15px;
+
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.topSingleSpace{
+	padding-top: 0.5%;
+}
