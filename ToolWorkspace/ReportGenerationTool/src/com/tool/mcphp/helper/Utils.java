@@ -51,7 +51,7 @@ public class Utils {
 		
 		//System.out.println(lastSubmittedDate+"|"+currentExtractedDate);
 		
-		
+		//System.out.println("lastSubmittedDate: "+lastSubmittedDate + "|" + lastSubmittedDateArray[ConstantFile.MONTH]);
 		DateTime submitted = new DateTime(lastSubmittedDateArray[ConstantFile.YEAR], 
 										lastSubmittedDateArray[ConstantFile.MONTH], 
 										lastSubmittedDateArray[ConstantFile.DATE], 0, 0, 0, 0);
@@ -105,6 +105,8 @@ public class Utils {
 		
 		int month = value / 100;
 		int day = value % 100;
+		
+
 		
 		returnArray [0] = month;
 		returnArray [1] = day;

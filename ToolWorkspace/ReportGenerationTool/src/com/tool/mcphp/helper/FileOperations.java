@@ -41,7 +41,7 @@ import com.tool.mcphp.databeans.Uploaded;
  */
 public class FileOperations {
 
-	private static ArrayList<Uploaded> uploadedList = new ArrayList<Uploaded>();
+	private static ArrayList<Uploaded> uploadedList = new ArrayList<Uploaded>();;
 	
 	private ArrayList<Formatted> formattedList = new ArrayList<Formatted>();
 	
@@ -53,7 +53,13 @@ public class FileOperations {
 	
 	private ArrayList<FinalCSVRecord> finalCSVList = new ArrayList<FinalCSVRecord>();
 
-	private int lastRow;
+	private int lastRow = 0;
+	
+	
+	public FileOperations(){
+		System.out.println("Constructor called......");
+
+	}
 	
 	public ArrayList<Uploaded> getUploadedList() {
 		return uploadedList;
@@ -136,7 +142,7 @@ public class FileOperations {
 			e.printStackTrace();
 		}
 		//printUploadedList();
-		
+		//System.out.println("uploadedList.size()"+uploadedList.size());
 		return uploadedList;
 		
 	}
@@ -146,6 +152,7 @@ public class FileOperations {
 	 */
 	public void mergeObjects(){	
 		System.out.println("merging files..");
+		System.out.println("uploadedList.size()"+uploadedList.size());
 		ArrayList<Master> masterList = CourseDetails.getInstance().getMasterList();
 		
 		//copy uploaded file to the formatted file
@@ -251,13 +258,14 @@ public class FileOperations {
 		System.out.println("Reading from all submitted file...");
 		Sheet sheet = wb.getSheetAt(0);
 		
-		System.out.println("Last row: "+sheet.getLastRowNum());
 		
-		lastRow = sheet.getLastRowNum() + 1;
+		
+		//lastRow = sheet.getLastRowNum() + 1;
 		
 		
 		Iterator rowIterator = sheet.rowIterator();
 		
+		int count = 0;
 		while(rowIterator.hasNext()){
 			
 			Row row = (Row) rowIterator.next();
@@ -317,12 +325,15 @@ public class FileOperations {
 						
 					}      
 				}
+				count ++;
 				allSubmittedList.add(allSubmitted);
 			}
 			
 			
 		}
-		
+		lastRow = count + 1;
+		//System.out.println("sheet.getLastRowNum()+1 :"+sheet.getLastRowNum()+1);
+		//System.out.println("lastRow :"+lastRow);
 		//printMergedList(allSubmittedList);
 	}
 	
@@ -363,10 +374,10 @@ public class FileOperations {
 			}			
 		}
 		
-		System.out.println("New Records");
+		/*System.out.println("New Records size: "+newRecordsList.size());
 		printMergedList(newRecordsList);
 		System.out.println("Missing Records");
-		printMergedList(missingNPNList);
+		printMergedList(missingNPNList);*/
 		
 	}
 	

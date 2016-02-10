@@ -91,6 +91,9 @@ public class FileUpload {
 	
 	
 	public String uploadFile() throws IOException {
+		
+		//fileOperations = new FileOperations();
+		
 		InputStream inputStream = null;
         OutputStream outputStream = null;
         FacesContext context = FacesContext.getCurrentInstance();
