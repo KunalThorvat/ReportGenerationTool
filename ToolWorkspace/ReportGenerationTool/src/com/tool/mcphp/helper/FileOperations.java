@@ -41,7 +41,7 @@ import com.tool.mcphp.databeans.Uploaded;
  */
 public class FileOperations {
 
-	private static ArrayList<Uploaded> uploadedList = new ArrayList<Uploaded>();;
+	private static ArrayList<Uploaded> uploadedList = new ArrayList<Uploaded>();
 	
 	private ArrayList<Formatted> formattedList = new ArrayList<Formatted>();
 	
@@ -71,6 +71,54 @@ public class FileOperations {
 	
 	
 	
+	public ArrayList<Formatted> getFormattedList() {
+		return formattedList;
+	}
+
+	public void setFormattedList(ArrayList<Formatted> formattedList) {
+		this.formattedList = formattedList;
+	}
+
+	public ArrayList<Formatted> getAllSubmittedList() {
+		return allSubmittedList;
+	}
+
+	public void setAllSubmittedList(ArrayList<Formatted> allSubmittedList) {
+		this.allSubmittedList = allSubmittedList;
+	}
+
+	public ArrayList<Formatted> getNewRecordsList() {
+		return newRecordsList;
+	}
+
+	public void setNewRecordsList(ArrayList<Formatted> newRecordsList) {
+		this.newRecordsList = newRecordsList;
+	}
+
+	public ArrayList<Formatted> getMissingNPNList() {
+		return missingNPNList;
+	}
+
+	public void setMissingNPNList(ArrayList<Formatted> missingNPNList) {
+		this.missingNPNList = missingNPNList;
+	}
+
+	public ArrayList<FinalCSVRecord> getFinalCSVList() {
+		return finalCSVList;
+	}
+
+	public void setFinalCSVList(ArrayList<FinalCSVRecord> finalCSVList) {
+		this.finalCSVList = finalCSVList;
+	}
+
+	public int getLastRow() {
+		return lastRow;
+	}
+
+	public void setLastRow(int lastRow) {
+		this.lastRow = lastRow;
+	}
+
 	/**
 	 * reads the uploaded file
 	 * @param path: path where the file is stored
@@ -78,6 +126,7 @@ public class FileOperations {
 	 * @throws FileNotFoundException
 	 */
 	public ArrayList<Uploaded> readUploadedFile(String path) throws FileNotFoundException{
+		uploadedList = new ArrayList<Uploaded>();
 		BufferedReader br = new BufferedReader(new FileReader(path));
 		System.out.println("Parsing the downloaded list ..");
 		String record = "";
@@ -154,7 +203,7 @@ public class FileOperations {
 		System.out.println("merging files..");
 		System.out.println("uploadedList.size()"+uploadedList.size());
 		ArrayList<Master> masterList = CourseDetails.getInstance().getMasterList();
-		
+		//printUploadedList();
 		//copy uploaded file to the formatted file
 		for(Uploaded uploaded: uploadedList){
 			Formatted formatted = new Formatted();

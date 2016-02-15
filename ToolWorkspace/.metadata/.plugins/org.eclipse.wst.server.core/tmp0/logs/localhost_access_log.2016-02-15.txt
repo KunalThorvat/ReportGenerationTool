@@ -1,0 +1,7 @@
+127.0.0.1 - - [15/Feb/2016:13:35:29 -0600] "GET / HTTP/1.1" 404 994
+0:0:0:0:0:0:0:1 - - [15/Feb/2016:13:35:30 -0600] "GET /ReportGenerationTool/faces/home.xhtml HTTP/1.1" 200 6553
+0:0:0:0:0:0:0:1 - - [15/Feb/2016:13:36:09 -0600] "GET /ReportGenerationTool/faces/home.xhtml HTTP/1.1" 200 6553
+0:0:0:0:0:0:0:1 - - [15/Feb/2016:13:36:09 -0600] "GET /ReportGenerationTool/faces/javax.faces.resource/style.css?ln=css HTTP/1.1" 200 184
+0:0:0:0:0:0:0:1 - - [15/Feb/2016:13:36:09 -0600] "GET /ReportGenerationTool/faces/javax.faces.resource/bootstrap.css?ln=css HTTP/1.1" 200 137731
+0:0:0:0:0:0:0:1 - - [15/Feb/2016:13:38:19 -0600] "POST /ReportGenerationTool/faces/home.xhtml HTTP/1.1" 200 27822
+0:0:0:0:0:0:0:1 - - [15/Feb/2016:13:38:30 -0600] "POST /ReportGenerationTool/faces/home.xhtml HTTP/1.1" 200 3627

@@ -1,0 +1,629 @@
+/**
+ * 
+ */
+package com.tool.mcphp.helper;
+
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+
+import org.apache.poi.EncryptedDocumentException;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.joda.time.DateTime;
+import org.joda.time.Months;
+import org.joda.time.Years;
+
+import com.tool.mcphp.constant.ConstantFile;
+import com.tool.mcphp.databeans.Course;
+import com.tool.mcphp.databeans.FinalCSVRecord;
+import com.tool.mcphp.databeans.Formatted;
+import com.tool.mcphp.databeans.Master;
+import com.tool.mcphp.databeans.Uploaded;
+
+/**
+ * @author kthorv2
+ * for perfroming all the read/write file operations
+ */
+public class FileOperations {
+
+	private static ArrayList<Uploaded> uploadedList = new ArrayList<Uploaded>();;
+	
+	private ArrayList<Formatted> formattedList = new ArrayList<Formatted>();
+	
+	private ArrayList<Formatted> allSubmittedList = new ArrayList<Formatted>();
+	
+	private ArrayList<Formatted> newRecordsList = new ArrayList<Formatted>();
+	
+	private ArrayList<Formatted> missingNPNList = new ArrayList<Formatted>();
+	
+	private ArrayList<FinalCSVRecord> finalCSVList = new ArrayList<FinalCSVRecord>();
+
+	private int lastRow = 0;
+	
+	
+	public FileOperations(){
+		System.out.println("Constructor called......");
+
+	}
+	
+	public ArrayList<Uploaded> getUploadedList() {
+		return uploadedList;
+	}
+
+	public void setUploadedList(ArrayList<Uploaded> uploadedList) {
+		this.uploadedList = uploadedList;
+	}
+	
+	
+	
+	public ArrayList<Formatted> getFormattedList() {
+		return formattedList;
+	}
+
+	public void setFormattedList(ArrayList<Formatted> formattedList) {
+		this.formattedList = formattedList;
+	}
+
+	public ArrayList<Formatted> getAllSubmittedList() {
+		return allSubmittedList;
+	}
+
+	public void setAllSubmittedList(ArrayList<Formatted> allSubmittedList) {
+		this.allSubmittedList = allSubmittedList;
+	}
+
+	public ArrayList<Formatted> getNewRecordsList() {
+		return newRecordsList;
+	}
+
+	public void setNewRecordsList(ArrayList<Formatted> newRecordsList) {
+		this.newRecordsList = newRecordsList;
+	}
+
+	public ArrayList<Formatted> getMissingNPNList() {
+		return missingNPNList;
+	}
+
+	public void setMissingNPNList(ArrayList<Formatted> missingNPNList) {
+		this.missingNPNList = missingNPNList;
+	}
+
+	public ArrayList<FinalCSVRecord> getFinalCSVList() {
+		return finalCSVList;
+	}
+
+	public void setFinalCSVList(ArrayList<FinalCSVRecord> finalCSVList) {
+		this.finalCSVList = finalCSVList;
+	}
+
+	public int getLastRow() {
+		return lastRow;
+	}
+
+	public void setLastRow(int lastRow) {
+		this.lastRow = lastRow;
+	}
+
+	/**
+	 * reads the uploaded file
+	 * @param path: path where the file is stored
+	 * @return
+	 * @throws FileNotFoundException
+	 */
+	public ArrayList<Uploaded> readUploadedFile(String path) throws FileNotFoundException{
+		BufferedReader br = new BufferedReader(new FileReader(path));
+		System.out.println("Parsing the downloaded list ..");
+		String record = "";
+		int counter = 0;
+		try {
+			while (((record = br.readLine()) != null) ) {
+				counter ++ ;
+				
+				if(counter != 1){
+					Uploaded uploaded =  new Uploaded();
+					
+					String[] cells = record.split(ConstantFile.UPLOADED_FILE_SEPARATOR);
+					
+					//populating the values
+					if(cells[ConstantFile.FIRST_NAME_COLUMN]!=null)
+						uploaded.setFirstName(cells[ConstantFile.FIRST_NAME_COLUMN].replace("\"", "").trim());
+					else
+						uploaded.setFirstName("");
+					
+					
+					if(cells[ConstantFile.LAST_NAME_COLUMN]!=null)
+						uploaded.setLastName(cells[ConstantFile.LAST_NAME_COLUMN].replace("\"", "").trim());
+					else
+						uploaded.setLastName("");
+					
+					if(cells[ConstantFile.EMAIL_ID_COLUMN]!=null)
+						uploaded.setEmailID(cells[ConstantFile.EMAIL_ID_COLUMN].replace("\"", "").trim());
+					else
+						uploaded.setEmailID("");
+					
+					if(cells[ConstantFile.COMPLETION_DATE_COLUMN]!=null)
+						uploaded.setCompletionDate(cells[ConstantFile.COMPLETION_DATE_COLUMN].replace("\"", "").trim());
+					else
+						uploaded.setCompletionDate("");
+					
+					if(cells[ConstantFile.COMPLETION_DATE_FORMATTED_COLUMN]!=null)
+						uploaded.setCompletionDateFormatted(cells[ConstantFile.COMPLETION_DATE_FORMATTED_COLUMN].replace("\"", "").trim());
+					else
+						uploaded.setCompletionDateFormatted("");
+					
+					if(cells[ConstantFile.CERTIFICATE_CODE_COLUMN]!=null)
+						uploaded.setCertificateCode(cells[ConstantFile.CERTIFICATE_CODE_COLUMN].replace("\"", "").trim());
+					else
+						uploaded.setCertificateCode("");
+					
+					//add to the list
+					uploadedList.add(uploaded);
+				}
+				
+
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		try {
+			br.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//printUploadedList();
+		System.out.println("uploadedList.size()"+uploadedList.size());
+		return uploadedList;
+		
+	}
+	
+	/**
+	 * merges the uploaded file first by email ID and then by firstname and lastname and assigns NPN to all the records
+	 */
+	public void mergeObjects(){	
+		System.out.println("merging files..");
+		System.out.println("uploadedList.size()"+uploadedList.size());
+		ArrayList<Master> masterList = CourseDetails.getInstance().getMasterList();
+		
+		//copy uploaded file to the formatted file
+		for(Uploaded uploaded: uploadedList){
+			Formatted formatted = new Formatted();
+			formatted.setFirstName(uploaded.getFirstName());
+			formatted.setLastName(uploaded.getLastName());
+			formatted.setEmailID(uploaded.getEmailID());
+			formatted.setCompletionDate(uploaded.getCompletionDate());
+			formatted.setCompletionDateFormatted(uploaded.getCompletionDateFormatted());
+			formatted.setCertificateCode(uploaded.getCertificateCode());
+			formattedList.add(formatted);
+
+		}
+		
+		//merge by email id
+		for(int i = 0;i<uploadedList.size();i++){
+			for(Master master: masterList){
+				if(master.getEmailID().equalsIgnoreCase(uploadedList.get(i).getEmailID())){
+					formattedList.get(i).setNpn(master.getNpn());
+				}
+			}
+		}
+		
+		//merge by firstname,lastname
+		for(int i = 0;i<uploadedList.size();i++){
+			for(Master master: masterList){
+				if(master.getFirstName().equalsIgnoreCase(uploadedList.get(i).getFirstName()) && 
+						master.getLastName().equalsIgnoreCase(uploadedList.get(i).getLastName())){
+					//if NPN is not updated then set the NPN
+					if(formattedList.get(i).getNpn().equalsIgnoreCase("")){
+						formattedList.get(i).setNpn(master.getNpn());
+					}
+					
+				}
+			}
+		}
+		//printMergedList(formattedList);
+		
+	}
+
+	
+	/**
+	 * writes the merged list
+	 * @param path: path for writing the merged file
+	 * @throws IOException
+	 */
+	public void createMergedFile(String path) throws IOException{
+		FileOutputStream mergedStream = new FileOutputStream(path);
+		Workbook merged = new XSSFWorkbook();
+		CreationHelper createHelper = merged.getCreationHelper();
+	    Sheet sheet = merged.createSheet("mergedSheet");
+
+	    // Create a row for the header.
+	    Row headerRow = sheet.createRow((short)0);
+	    
+	    //Adding all the header column names
+	    for(int i=0;i<ConstantFile.MERGED_COLUMN_HEADERS.size();i++){
+	    	headerRow.createCell(i).setCellValue(createHelper.createRichTextString(ConstantFile.MERGED_COLUMN_HEADERS.get(i)));
+	    }
+	    
+	    //the mergerList and storing all the data in the merged file
+	    for(int i = 0;i<formattedList.size();i++){
+			Row contentRow = sheet.createRow(i+1);
+			
+			for(int j=0;j<ConstantFile.MERGED_TOTAL_COLUMNS;j++){
+
+				if(j==ConstantFile.MERGED_FIRST_NAME_COLUMN){
+					contentRow.createCell(j).setCellValue(createHelper.createRichTextString(formattedList.get(i).getFirstName()));
+				}else if(j==ConstantFile.MERGED_LAST_NAME_COLUMN){
+					contentRow.createCell(j).setCellValue(createHelper.createRichTextString(formattedList.get(i).getLastName()));
+				}else if(j==ConstantFile.MERGED_EMAIL_ID_COLUMN){
+					contentRow.createCell(j).setCellValue(createHelper.createRichTextString(formattedList.get(i).getEmailID()));
+				}else if(j==ConstantFile.MERGED_COMPLETION_DATE_COLUMN){
+					contentRow.createCell(j).setCellValue(createHelper.createRichTextString(formattedList.get(i).getCompletionDate()));
+				}else if(j==ConstantFile.MERGED_COMPLETION_DATE_FORMATTED_COLUMN){
+					contentRow.createCell(j).setCellValue(createHelper.createRichTextString(formattedList.get(i).getCompletionDateFormatted()));
+				}else if(j==ConstantFile.MERGED_CERTIFICATE_CODE_COLUMN){
+					contentRow.createCell(j).setCellValue(createHelper.createRichTextString(formattedList.get(i).getCertificateCode()));
+				}else if(j==ConstantFile.MERGED_NPN_COLUMN){
+					contentRow.createCell(j).setCellValue(createHelper.createRichTextString(formattedList.get(i).getNpn()));
+				}
+							
+			}			
+		}	
+	    
+	    
+		merged.write(mergedStream);
+		mergedStream.close();
+
+	}
+	
+	/**
+	 * creates a list of all the submitted records
+	 * @param path : path for getting the all submitted file
+	 * @throws IOException
+	 */
+	public void getAllSubmittedList(String path) throws IOException{
+		
+		FileInputStream allSubmittedStream = new FileInputStream(path);
+		Workbook wb  = new XSSFWorkbook(allSubmittedStream);
+		
+		System.out.println("Reading from all submitted file...");
+		Sheet sheet = wb.getSheetAt(0);
+		
+		
+		
+		//lastRow = sheet.getLastRowNum() + 1;
+		
+		
+		Iterator rowIterator = sheet.rowIterator();
+		
+		int count = 0;
+		while(rowIterator.hasNext()){
+			
+			Row row = (Row) rowIterator.next();
+			
+			if(row.getRowNum() > 0){
+				
+				Formatted allSubmitted = new Formatted();
+				Iterator cellIterator = row.cellIterator();
+				
+				while(cellIterator.hasNext()){
+					
+					Cell cell = (Cell) cellIterator.next();
+					cell.setCellType(1);
+					
+					if(cell.getColumnIndex() == ConstantFile.MERGED_FIRST_NAME_COLUMN){
+						
+						if(cell.getStringCellValue() != null){
+							allSubmitted.setFirstName(cell.getStringCellValue());
+						}
+						
+					}else if(cell.getColumnIndex() == ConstantFile.MERGED_LAST_NAME_COLUMN){
+						
+						if(cell.getStringCellValue() != null){
+							allSubmitted.setLastName(cell.getStringCellValue());
+						}
+						
+					}else if(cell.getColumnIndex() == ConstantFile.MERGED_EMAIL_ID_COLUMN){
+						
+						if(cell.getStringCellValue() != null){
+							allSubmitted.setEmailID(cell.getStringCellValue());
+						}
+						
+					}else if(cell.getColumnIndex() == ConstantFile.MERGED_COMPLETION_DATE_COLUMN){
+						
+						if(cell.getStringCellValue() != null){
+							allSubmitted.setCompletionDate(cell.getStringCellValue());
+						}
+						
+					}else if(cell.getColumnIndex() == ConstantFile.MERGED_COMPLETION_DATE_FORMATTED_COLUMN){
+						
+						//System.out.println(cell.getRichStringCellValue());
+						if(cell.getStringCellValue() != null){
+							allSubmitted.setCompletionDateFormatted(cell.getStringCellValue());
+						}
+						
+					}else if(cell.getColumnIndex() == ConstantFile.MERGED_CERTIFICATE_CODE_COLUMN){
+						
+						if(cell.getStringCellValue() != null){
+							allSubmitted.setCertificateCode(cell.getStringCellValue());
+						}
+						
+					}else if(cell.getColumnIndex() == ConstantFile.MERGED_NPN_COLUMN){
+						
+						if(cell.getStringCellValue() != null){
+							allSubmitted.setNpn(cell.getStringCellValue());
+						}
+						
+					}      
+				}
+				count ++;
+				allSubmittedList.add(allSubmitted);
+			}
+			
+			
+		}
+		lastRow = count + 1;
+		//System.out.println("sheet.getLastRowNum()+1 :"+sheet.getLastRowNum()+1);
+		//System.out.println("lastRow :"+lastRow);
+		//printMergedList(allSubmittedList);
+	}
+	
+	
+	/**
+	 * gets the new records
+	 */
+	public void getNewRecords(){
+		
+		System.out.println("Fetching the new records");
+		for(int i = 0;i < formattedList.size();i++){
+			
+			Formatted newRecords = new Formatted();
+			if(Utils.isValidMonth(formattedList.get(i).getCompletionDateFormatted())){
+				for(int j = 0;j < allSubmittedList.size();j++){
+					boolean isNPNpresent = false;				
+					if(formattedList.get(i).getNpn().trim().equalsIgnoreCase("")){
+						
+						missingNPNList.add(formattedList.get(i));
+						break;
+					}else{
+						if(formattedList.get(i).getNpn().trim().equalsIgnoreCase(allSubmittedList.get(j).getNpn().trim())){
+							
+							isNPNpresent = true;
+							if(Utils.isValidYear(allSubmittedList.get(j).getCompletionDateFormatted(), formattedList.get(i).getCompletionDateFormatted())){
+								newRecords = formattedList.get(i);	
+								newRecordsList.add(newRecords);
+							}
+							break;
+						}
+						
+						if(j == (allSubmittedList.size() - 1) && !isNPNpresent){
+							newRecords = formattedList.get(i);
+							newRecordsList.add(newRecords);
+						}
+					}	
+				}
+			}			
+		}
+		
+		/*System.out.println("New Records size: "+newRecordsList.size());
+		printMergedList(newRecordsList);
+		System.out.println("Missing Records");
+		printMergedList(missingNPNList);*/
+		
+	}
+	
+	
+	/**
+	 * appends the new records to all submitted file
+	 * @param path: path for all submitted file
+	 * @throws EncryptedDocumentException
+	 * @throws InvalidFormatException
+	 * @throws IOException
+	 */
+	public void appendNewRecords(String path) throws EncryptedDocumentException, InvalidFormatException, IOException{
+		
+		System.out.println("Appending the new records");
+		FileInputStream allSubmittedStream = new FileInputStream(path);
+		
+		Workbook wb = WorkbookFactory.create(allSubmittedStream);
+		Sheet sheet = wb.getSheetAt(0);
+		
+		FileOutputStream fileOut = new FileOutputStream(path);
+		
+		for(int i = 0;i<newRecordsList.size();i++){
+			Row contentRow = sheet.createRow(lastRow + i);
+			for(int j=0;j<ConstantFile.MERGED_TOTAL_COLUMNS;j++){
+
+				if(j==ConstantFile.MERGED_FIRST_NAME_COLUMN){
+					contentRow.createCell(j).setCellValue(newRecordsList.get(i).getFirstName());
+				}else if(j==ConstantFile.MERGED_LAST_NAME_COLUMN){
+					contentRow.createCell(j).setCellValue(newRecordsList.get(i).getLastName());
+				}else if(j==ConstantFile.MERGED_EMAIL_ID_COLUMN){
+					contentRow.createCell(j).setCellValue(newRecordsList.get(i).getEmailID());
+				}else if(j==ConstantFile.MERGED_COMPLETION_DATE_COLUMN){
+					contentRow.createCell(j).setCellValue(newRecordsList.get(i).getCompletionDate());
+				}else if(j==ConstantFile.MERGED_COMPLETION_DATE_FORMATTED_COLUMN){
+					contentRow.createCell(j).setCellValue(newRecordsList.get(i).getCompletionDateFormatted());
+				}else if(j==ConstantFile.MERGED_CERTIFICATE_CODE_COLUMN){
+					contentRow.createCell(j).setCellValue(newRecordsList.get(i).getCertificateCode());
+				}else if(j==ConstantFile.MERGED_NPN_COLUMN){
+					contentRow.createCell(j).setCellValue(newRecordsList.get(i).getNpn());
+				}
+							
+			}
+			
+			
+		}
+		wb.write(fileOut);
+	    fileOut.close();
+	    allSubmittedStream.close();		
+	}
+	
+	/**
+	 * builds the final CSV list
+	 * @param course: course object for all getting all the course related details
+	 */
+	public void buildFinalCSVRecordObject(Course course){
+		
+		System.out.println("Building the final csv list");
+		for(Formatted formatted: newRecordsList){
+			
+			FinalCSVRecord record = new FinalCSVRecord();
+			
+			//populating the "H|" part of CSV
+			record.gethPart().setStateID(course.getStateID());
+			record.gethPart().setProviderID(course.getProviderID());
+			record.gethPart().setCourseID(course.getCourseID());
+			record.gethPart().setCompletionDate(formatted.getCompletionDateFormatted());
+			
+			//populating the "S|" part of CSV
+			record.getsPart().setNpn(formatted.getNpn());
+			record.getsPart().setLastName(formatted.getLastName());
+			
+			//populating the "T|" part of CSV
+			record.settPart("1"); //hard coded for now
+			
+			finalCSVList.add(record);
+		}
+		
+		printFinalCSV(finalCSVList);
+	}
+	
+	/**
+	 * generates the final CSV
+	 * @param path: for writing to the final csv
+	 * @throws IOException
+	 */
+	public void buildFinalCSVFile(String path) throws IOException{
+		
+		System.out.println("Generating the CSV file");
+		FileWriter writer = new FileWriter(path);
+		
+		for(FinalCSVRecord record: finalCSVList){
+			//writing the H part
+			writer.append(ConstantFile.H_PART + ConstantFile.RECORD_SEPARATOR + 
+							record.gethPart().getStateID() + ConstantFile.RECORD_SEPARATOR +
+							record.gethPart().getProviderID() + ConstantFile.RECORD_SEPARATOR +
+							record.gethPart().getCourseID() + ConstantFile.RECORD_SEPARATOR +
+							record.gethPart().getCompletionDate() + ConstantFile.NEW_LINE);
+			
+			//writing the S part
+			writer.append(ConstantFile.S_PART + ConstantFile.RECORD_SEPARATOR + 
+					record.getsPart().getNpn() + ConstantFile.RECORD_SEPARATOR +
+					record.getsPart().getLicNbr() + ConstantFile.RECORD_SEPARATOR +
+					record.getsPart().getSsn() + ConstantFile.RECORD_SEPARATOR +
+					record.getsPart().getLicClass() + ConstantFile.RECORD_SEPARATOR + 
+					record.getsPart().getCredit() + ConstantFile.RECORD_SEPARATOR +
+					record.getsPart().getFirstName() + ConstantFile.RECORD_SEPARATOR +
+					record.getsPart().getMiddleName() + ConstantFile.RECORD_SEPARATOR +
+					record.getsPart().getLastName() + ConstantFile.NEW_LINE);
+			
+		    //writing the T part 
+			writer.append(ConstantFile.T_PART + ConstantFile.RECORD_SEPARATOR + 
+							record.gettPart() + ConstantFile.NEW_LINE);	
+			
+		}
+		
+		writer.flush();
+		writer.close();
+	}
+	
+	/**
+	 * creates the file containing missing npns
+	 * @param path: path for storing the missing NPN file
+	 * @throws IOException 
+	 */
+	public void createMissingNpnFile(String path) throws IOException{
+		
+		System.out.println("Creating the missing NPN file");
+		FileOutputStream missingNPNStream = new FileOutputStream(path);
+		Workbook missingNPN = new XSSFWorkbook();
+		CreationHelper createHelper = missingNPN.getCreationHelper();
+	    Sheet sheet = missingNPN.createSheet("MISSING NPNs");
+
+	    // Create a row for the header.
+	    Row headerRow = sheet.createRow((short)0);
+	    
+	    //Adding all the header column names
+	    for(int i=0;i<ConstantFile.MERGED_COLUMN_HEADERS.size();i++){
+	    	headerRow.createCell(i).setCellValue(createHelper.createRichTextString(ConstantFile.MERGED_COLUMN_HEADERS.get(i)));
+	    }
+	    
+	    //the mergerList and storing all the data in the merged file
+	    for(int i = 0;i<missingNPNList.size();i++){
+			Row contentRow = sheet.createRow(i+1);
+			
+			for(int j=0;j<ConstantFile.MERGED_TOTAL_COLUMNS;j++){
+
+				if(j==ConstantFile.MERGED_FIRST_NAME_COLUMN){
+					contentRow.createCell(j).setCellValue(createHelper.createRichTextString(missingNPNList.get(i).getFirstName()));
+				}else if(j==ConstantFile.MERGED_LAST_NAME_COLUMN){
+					contentRow.createCell(j).setCellValue(createHelper.createRichTextString(missingNPNList.get(i).getLastName()));
+				}else if(j==ConstantFile.MERGED_EMAIL_ID_COLUMN){
+					contentRow.createCell(j).setCellValue(createHelper.createRichTextString(missingNPNList.get(i).getEmailID()));
+				}else if(j==ConstantFile.MERGED_COMPLETION_DATE_COLUMN){
+					contentRow.createCell(j).setCellValue(createHelper.createRichTextString(missingNPNList.get(i).getCompletionDate()));
+				}else if(j==ConstantFile.MERGED_COMPLETION_DATE_FORMATTED_COLUMN){
+					contentRow.createCell(j).setCellValue(createHelper.createRichTextString(missingNPNList.get(i).getCompletionDateFormatted()));
+				}else if(j==ConstantFile.MERGED_CERTIFICATE_CODE_COLUMN){
+					contentRow.createCell(j).setCellValue(createHelper.createRichTextString(missingNPNList.get(i).getCertificateCode()));
+				}else if(j==ConstantFile.MERGED_NPN_COLUMN){
+					contentRow.createCell(j).setCellValue(createHelper.createRichTextString(missingNPNList.get(i).getNpn()));
+				}
+							
+			}			
+		}	
+	    
+	    
+	    missingNPN.write(missingNPNStream);
+		missingNPNStream.close();
+	}
+	
+	/*for testing purposes*/
+	public void printUploadedList(){
+		
+		for(Uploaded uploaded: uploadedList){
+			System.out.println(uploaded.getFirstName()+"  |  "+uploaded.getLastName()+"  |  "+uploaded.getEmailID()+"  |  "+uploaded.getCompletionDate()+"  |  "+uploaded.getCompletionDateFormatted()+"  |  "+uploaded.getCertificateCode());
+		}
+		
+	}
+	
+	public void printMergedList(ArrayList<Formatted> formattedList){
+		
+		for(Formatted formatted: formattedList){
+			System.out.println(formatted.getFirstName()+"|"+formatted.getLastName()+"|"+formatted.getEmailID()+"|"+formatted.getCompletionDate()+"|"+formatted.getCompletionDateFormatted()+"|"+formatted.getCertificateCode()+"|"+formatted.getNpn());
+		}
+		
+	}
+	
+	public void printFinalCSV(ArrayList<FinalCSVRecord> finalList){
+		
+		for(FinalCSVRecord record : finalList){
+			System.out.println("H|"+record.gethPart().getStateID()+"|"+record.gethPart().getProviderID()+"|"+record.gethPart().getCourseID()+"|"+record.gethPart().getCompletionDate());
+			System.out.println("S|"+record.getsPart().getNpn()+"|"+record.getsPart().getLicNbr()+"|"+record.getsPart().getSsn()+"|"+record.getsPart().getLicClass()+"|"+record.getsPart().getCredit()+"|"+record.getsPart().getFirstName()+"|"+record.getsPart().getMiddleName()+"|"+record.getsPart().getLastName());
+			System.out.println("T|"+record.gettPart());
+			System.out.println("");
+			System.out.println("");
+		}
+		
+		
+	}
+	/*for testing purposes*/
+}

@@ -25,6 +25,7 @@ import javax.servlet.http.Part;
 
 import com.tool.mcphp.constant.ConstantFile;
 import com.tool.mcphp.databeans.Course;
+import com.tool.mcphp.databeans.Formatted;
 import com.tool.mcphp.databeans.Uploaded;
 import com.tool.mcphp.helper.CourseDetails;
 import com.tool.mcphp.helper.FileOperations;
@@ -53,6 +54,18 @@ public class FileUpload {
 	private FileOperations fileOperations = new FileOperations();
 	
 	private String folderPath = ConstantFile.MAIN_PATH; 
+	
+	private boolean newRecordsPresent;
+	
+	private boolean missingRecordsPresent;
+	
+	private ArrayList<Formatted> newRecords = new ArrayList<Formatted>();
+	
+	private ArrayList<Formatted> missingRecords = new ArrayList<Formatted>();
+	
+	private String csvPath;
+	
+	private String missingRecordPath;
 	
 	public Part getFile() {
 		return file;
@@ -90,6 +103,66 @@ public class FileUpload {
 	
 	
 	
+	public FileOperations getFileOperations() {
+		return fileOperations;
+	}
+	public void setFileOperations(FileOperations fileOperations) {
+		this.fileOperations = fileOperations;
+	}
+	public String getFolderPath() {
+		return folderPath;
+	}
+	public void setFolderPath(String folderPath) {
+		this.folderPath = folderPath;
+	}
+	
+	public boolean isNewRecordsPresent() {
+		return newRecordsPresent;
+	}
+	public void setNewRecordsPresent(boolean newRecordsPresent) {
+		this.newRecordsPresent = newRecordsPresent;
+	}
+	public boolean isMissingRecordsPresent() {
+		return missingRecordsPresent;
+	}
+	public void setMissingRecordsPresent(boolean missingRecordsPresent) {
+		this.missingRecordsPresent = missingRecordsPresent;
+	}
+	public static void setCourseDropDown(Map<String, String> courseDropDown) {
+		FileUpload.courseDropDown = courseDropDown;
+	}
+	
+	
+	public ArrayList<Formatted> getNewRecords() {
+		return newRecords;
+	}
+	public void setNewRecords(ArrayList<Formatted> newRecords) {
+		this.newRecords = newRecords;
+	}
+	
+	
+	public ArrayList<Formatted> getMissingRecords() {
+		return missingRecords;
+	}
+	public void setMissingRecords(ArrayList<Formatted> missingRecords) {
+		this.missingRecords = missingRecords;
+	}
+	
+	
+	public String getCsvPath() {
+		return csvPath;
+	}
+	public void setCsvPath(String csvPath) {
+		this.csvPath = csvPath;
+	}
+	
+	
+	public String getMissingRecordPath() {
+		return missingRecordPath;
+	}
+	public void setMissingRecordPath(String missingRecordPath) {
+		this.missingRecordPath = missingRecordPath;
+	}
 	public String uploadFile() throws IOException {
 		
 		//fileOperations = new FileOperations();
@@ -143,6 +216,16 @@ public class FileUpload {
 	public String generateCSV(){
 		try{
 			
+			
+			System.out.println("fileOperations: "+fileOperations);
+			System.out.println("fileOperations.getUploadedList().size(): "+fileOperations.getUploadedList().size());
+			System.out.println("fileOperations.getAllSubmittedList().size(): "+fileOperations.getAllSubmittedList().size());
+			System.out.println("fileOperations.getFormattedList().size(): "+fileOperations.getFormattedList().size());
+			System.out.println("fileOperations.getNewRecordsList().size(): "+fileOperations.getNewRecordsList().size());
+			System.out.println("fileOperations.getMissingNPNList().size(): "+fileOperations.getMissingNPNList().size());
+			System.out.println("fileOperations.getFinalCSVList().size(): "+fileOperations.getFinalCSVList().size());
+			
+			
 			System.out.println("Selected value: "+selectedValue);
 			
 			//getting the selected course details
@@ -172,6 +255,24 @@ public class FileUpload {
 			//get all the new records
 			fileOperations.getNewRecords();
 			
+			//for displaying new records
+			setNewRecords(fileOperations.getNewRecordsList());
+			
+			if(getNewRecords().size()>0){
+				setNewRecordsPresent(true);
+			}else{
+				setNewRecordsPresent(false);
+			}
+			
+			//for displaying missing records
+			setMissingRecords(fileOperations.getMissingNPNList());
+			
+			if(getMissingRecords().size()>0){
+				setMissingRecordsPresent(true);
+			}else{
+				setMissingRecordsPresent(false);
+			}
+			
 			//append new records to the all submitted file
 			fileOperations.appendNewRecords(ConstantFile.MAIN_PATH +course.getAllSubmittedPath());
 			
@@ -180,9 +281,14 @@ public class FileUpload {
 			
 			//generating the final CSV file
 			fileOperations.buildFinalCSVFile(folderPath + "\\"+course.getCsvFileName());
+			setCsvPath(folderPath + "\\"+course.getCsvFileName());
 			
 			//generating the missing NPN list
 			fileOperations.createMissingNpnFile(ConstantFile.MAIN_PATH + "\\"+course.getMissingNPNPath());
+			setMissingRecordPath(ConstantFile.MAIN_PATH + "\\"+course.getMissingNPNPath());
+
+			
+			
 			
 		}catch(Exception e){
 			e.printStackTrace();
@@ -191,5 +297,9 @@ public class FileUpload {
 		return "results";
 		
 	}
+	
+	
+	
+	
 	
 }

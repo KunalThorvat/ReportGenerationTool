@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"      
+      xmlns:h="http://java.sun.com/jsf/html">
+      
+	<h:head>
+		<!-- <h:outputScript library="js" name="jquery-ui.js"></h:outputScript> -->	
+		<h:outputStylesheet library="css" name="bootstrap.css"></h:outputStylesheet>
+		<h:outputStylesheet library="css" name="style.css"></h:outputStylesheet>
+		
+	</h:head>
+	<h:body>
+		<div class="container-fluid" style="background-color: #e0ebeb!important;">
+			<div class="col-md-12">
+	
+		        <div class="container">
+		            <!-- Brand name -->
+		            <a id="logo" href="#" class="navbar-brand" title="Template Name">Report Generation Tool</a>
+		            <!-- Navagation -->
+		            <nav class="collapse navbar-collapse" id="mainNavBar">
+		                <ul class="nav navbar-nav navbar-right">
+		                    <li class="active"><a href="#hero">Home</a></li>
+		                    <li class=""><a href="#features">Features</a></li>
+				            <li><a href="#image">About</a></li>
+				            <li><a href="#gallery">Gallery</a></li>
+				            <li><a href="#faq">FAQ</a></li>
+				            <li><a href="#slider">Testimonials</a></li>
+				            <li><a href="#newsletter">Subscribe</a></li>
+		                </ul>
+		            </nav>
+		        </div>
+	
+	    	</div>
+	    </div>
+	    <div class = "container">
+	    	<div class="col-md-1">kejfekfno</div>
+	    	<h:panelGroup class="col-md-12 topSingleSpace" 
+   						 id="newRecordsContainer">
+   						
+   				<h:dataTable id = "newRecordsTable" rendered="#{!empty fileUpload.newRecordsPresent}" value="#{fileUpload.newRecords}" var="record" 
+   					styleClass="table-bordered table-striped">
+   					
+   					<h:column>   						
+   						<f:facet name="header">First Name</f:facet>
+   						#{record.getFirstName()}
+   					</h:column>
+   					
+   					<h:column>
+	   					<f:facet name="header">Last Name</f:facet>
+	   					#{record.getLastName()}
+	   				</h:column>
+	   				
+	   				<h:column>
+	   					<f:facet name="header">Last Name</f:facet>
+	   					#{record.getNpn()}
+	   				</h:column>
+   					
+					   					
+   				</h:dataTable>
+   				<h:outputText render="#{empty fileUpload.newRecordsPresent}">No new records available</h:outputText>
+   			</h:panelGroup>
+	    	<div class="col-md-5">
+
+	    	</div>
+	    	<div class="col-md-1"></div>
+	    </div>
+	    Results page
+	</h:body>
+</html>

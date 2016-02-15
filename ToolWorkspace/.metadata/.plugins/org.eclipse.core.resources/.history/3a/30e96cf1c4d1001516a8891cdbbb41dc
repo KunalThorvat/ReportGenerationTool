@@ -1,0 +1,274 @@
+/**
+ * 
+ */
+package com.tool.mcphp.managedbeans;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import javax.faces.bean.ManagedBean;
+import javax.faces.component.html.HtmlPanelGrid;
+import javax.faces.component.html.HtmlPanelGroup;
+import javax.faces.context.FacesContext;
+import javax.servlet.ServletContext;
+import javax.servlet.http.Part;
+
+
+
+import com.tool.mcphp.constant.ConstantFile;
+import com.tool.mcphp.databeans.Course;
+import com.tool.mcphp.databeans.Formatted;
+import com.tool.mcphp.databeans.Uploaded;
+import com.tool.mcphp.helper.CourseDetails;
+import com.tool.mcphp.helper.FileOperations;
+import com.tool.mcphp.helper.Utils;
+
+/**
+ * @author kthorv2
+ *managed bean for uploading the file
+ */
+@ManagedBean(name = "fileUpload")
+public class FileUpload {
+	
+	
+	//private static final Logger logger = Logger.getLogger(FileUpload.class);
+	
+	private Part file;
+
+	private String message;
+	
+	private ArrayList<Uploaded> uploadedFile;
+	
+	public static Map<String,String> courseDropDown = new LinkedHashMap<String,String>();
+	
+	private String selectedValue;
+	
+	private FileOperations fileOperations = new FileOperations();
+	
+	private String folderPath = ConstantFile.MAIN_PATH; 
+	
+	private boolean newRecordsPresent;
+	
+	private boolean missingRecordsPresent;
+	
+	private ArrayList<Formatted> newRecords = new ArrayList<Formatted>();
+	
+	private ArrayList<Formatted> missingRecords = new ArrayList<Formatted>();
+	
+	public Part getFile() {
+		return file;
+	}
+	public void setFile(Part file) {
+		this.file = file;
+	}
+	public String getMessage() {
+		return message;
+	}
+	public void setMessage(String message) {
+		this.message = message;
+	}
+			
+	public ArrayList<Uploaded> getUploadedFile() {
+		return uploadedFile;
+	}
+	public void setUploadedFile(ArrayList<Uploaded> uploadedFile) {
+		this.uploadedFile = uploadedFile;
+	}
+	
+	
+
+	public Map<String, String> getCourseDropDown() {
+		return courseDropDown;
+	}
+
+	public String getSelectedValue() {
+		return selectedValue;
+	}
+	public void setSelectedValue(String selectedValue) {
+		this.selectedValue = selectedValue;
+	}
+	
+	
+	
+	
+	public FileOperations getFileOperations() {
+		return fileOperations;
+	}
+	public void setFileOperations(FileOperations fileOperations) {
+		this.fileOperations = fileOperations;
+	}
+	public String getFolderPath() {
+		return folderPath;
+	}
+	public void setFolderPath(String folderPath) {
+		this.folderPath = folderPath;
+	}
+	
+	public boolean isNewRecordsPresent() {
+		return newRecordsPresent;
+	}
+	public void setNewRecordsPresent(boolean newRecordsPresent) {
+		this.newRecordsPresent = newRecordsPresent;
+	}
+	public boolean isMissingRecordsPresent() {
+		return missingRecordsPresent;
+	}
+	public void setMissingRecordsPresent(boolean missingRecordsPresent) {
+		this.missingRecordsPresent = missingRecordsPresent;
+	}
+	public static void setCourseDropDown(Map<String, String> courseDropDown) {
+		FileUpload.courseDropDown = courseDropDown;
+	}
+	
+	
+	public ArrayList<Formatted> getNewRecords() {
+		return newRecords;
+	}
+	public void setNewRecords(ArrayList<Formatted> newRecords) {
+		this.newRecords = newRecords;
+	}
+	
+	
+	public ArrayList<Formatted> getMissingRecords() {
+		return missingRecords;
+	}
+	public void setMissingRecords(ArrayList<Formatted> missingRecords) {
+		this.missingRecords = missingRecords;
+	}
+	public String uploadFile() throws IOException {
+		
+		//fileOperations = new FileOperations();
+		
+		InputStream inputStream = null;
+        OutputStream outputStream = null;
+        FacesContext context = FacesContext.getCurrentInstance();
+        ServletContext servletContext = (ServletContext) context
+                .getExternalContext().getContext();
+        String path = servletContext.getRealPath("");
+        String fileName = Utils.getFileNameFromPart(file);
+        boolean sourceFileSuccess = false;
+        if (file.getSize() > 0) {
+        	//destination where the file will be uploaded
+            File outputFile = new File(path + File.separator + fileName);
+            inputStream = file.getInputStream();
+            outputStream = new FileOutputStream(outputFile);
+            byte[] buffer = new byte[ConstantFile.BUFFER_SIZE];
+            int bytesRead = 0;
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
+            if (outputStream != null) {
+                outputStream.close();
+            }
+            if (inputStream != null) {
+                inputStream.close();
+            }
+            sourceFileSuccess = true;
+        }                
+        if (sourceFileSuccess) {
+            System.out.println("File uploaded to : " + path);
+            setMessage(fileName + " successfully uploaded");
+            
+           
+            
+            //for displaying the uploaded file
+            uploadedFile =  new ArrayList<Uploaded>();
+            setUploadedFile(fileOperations.readUploadedFile(path + File.separator + fileName));
+            
+            HtmlPanelGroup panelGroup = (HtmlPanelGroup) FacesContext.getCurrentInstance().getViewRoot().findComponent("buttonSection");
+            panelGroup.setStyle("display: block");
+            
+            
+        } else {
+            setMessage("Error, select atleast one file!");
+        } 
+        return null;
+	}
+	
+	public String generateCSV(){
+		try{
+			
+			System.out.println("Selected value: "+selectedValue);
+			
+			//getting the selected course details
+			Course course = CourseDetails.getInstance().getCourseMap().get(selectedValue);
+			
+			//creating the path for the folder
+			folderPath = folderPath + course.getFolderPath() + "\\" + new SimpleDateFormat(ConstantFile.FOLDER_NAMING_DATE_FORMAT).format(Calendar.getInstance().getTime());;
+			System.out.println("folderPath: "+folderPath);
+									
+			//creating the folder at that path
+			File folder = new File(folderPath);
+			folder.mkdir();
+			
+			
+			//merging the objects
+			System.out.println("Merging Objects");
+			fileOperations.mergeObjects();
+												
+			
+			//writing the merged file to the folder path
+			fileOperations.createMergedFile(folderPath + "\\"+course.getExcelFileName());
+			
+			//creating allsubmitted file object
+			System.out.println("All Submitted path: "+ ConstantFile.MAIN_PATH + course.getAllSubmittedPath());
+			fileOperations.getAllSubmittedList(ConstantFile.MAIN_PATH + course.getAllSubmittedPath());
+			
+			//get all the new records
+			fileOperations.getNewRecords();
+			
+			//for displaying new records
+			setNewRecords(fileOperations.getNewRecordsList());
+			
+			if(getNewRecords().size()>0){
+				setNewRecordsPresent(true);
+			}else{
+				setNewRecordsPresent(false);
+			}
+			
+			//for displaying missing records
+			setMissingRecords(fileOperations.getMissingNPNList());
+			
+			if(getMissingRecords().size()>0){
+				setMissingRecordsPresent(true);
+			}else{
+				setMissingRecordsPresent(false);
+			}
+			
+			//append new records to the all submitted file
+			fileOperations.appendNewRecords(ConstantFile.MAIN_PATH +course.getAllSubmittedPath());
+			
+			//build final CSV record object
+			fileOperations.buildFinalCSVRecordObject(course);
+			
+			//generating the final CSV file
+			fileOperations.buildFinalCSVFile(folderPath + "\\"+course.getCsvFileName());
+			
+			//generating the missing NPN list
+			fileOperations.createMissingNpnFile(ConstantFile.MAIN_PATH + "\\"+course.getMissingNPNPath());
+			
+
+			
+			
+			
+		}catch(Exception e){
+			e.printStackTrace();
+			return "error";
+		}
+		return "results";
+		
+	}
+	
+	
+	
+	
+	
+}
